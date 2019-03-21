@@ -7,6 +7,9 @@ import com.sony.features.dto.Feature;
 import com.sony.features.dto.Features;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Stack;
 
@@ -56,12 +59,28 @@ public class FeaturesController {
     }
     
     public int setIntegerFromFeatures(Features flags) {
+    	
+    	List<Feature> sortedListOfFeatures = sortFeaturesByRegion(flags.getListOfFeatures(), appConfig.getAvailableRegions());
+    	
     	StringBuilder sb = new StringBuilder();
     	
-    	for(Feature flag : flags.getListOfFeatures()) {
-    		
+    	for(Feature flag : sortedListOfFeatures) {
+    		if (flag.isActive())
+    			sb.append('1');
+    		else
+    			sb.append('0');
     	}
-    	return 0;
+    	return Integer.parseInt(sb.toString(), 2);
+    }
+    
+    public List<Feature> sortFeaturesByRegion(List<Feature> listOfFeatures, String[] regions) {
+    	Collections.sort(listOfFeatures, new Comparator<Feature>() {
+    		@Override
+    		public int compare(Feature f1, Feature f2) {
+    			return Integer.compare(Arrays.asList(regions).indexOf(f1.getName()), Arrays.asList(regions).indexOf(f2.getName()));
+    		}
+    	});
+    	return listOfFeatures;
     }
     
 }
