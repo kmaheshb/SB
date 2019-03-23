@@ -2,9 +2,11 @@ package com.sony.features;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sony.features.config.AppConfig;
-import com.sony.features.dto.Feature;
-import com.sony.features.dto.Features;
+import com.sony.features.config.FeatureFlagConfig;
+import com.sony.features.dto.FeatureFlags;
+import com.sony.features.dto.UIFeatureFlag;
+import com.sony.features.dto.UIFeatureFlags;
+import com.sony.features.implementation.FFServiceHandler;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,32 +15,55 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Stack;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @RestController
+@RequestMapping("/v1")
 public class FeaturesController {
 	
+	Logger logger = LogManager.getLogger(FeaturesController.class);
+	
 	@Autowired
-	AppConfig appConfig;
-    
-    @RequestMapping("/getFeatures")
-    public Features index() {
+	FeatureFlagConfig ffConfig;
+	
+	@Autowired
+	FFServiceHandler ffServiceHandler;
+     
+    @RequestMapping(value = "/features", method = {RequestMethod.GET})
+    public UIFeatureFlags index() {
+        logger.debug("Request Received: Fetch All Feature Flags");
+        
+        FeatureFlags allFeatures = ffServiceHandler.getAllFeatureFlags();
         
         int val = 3;
         return setFeaturesFromInteger(val);
     }
     
-    public Features setFeaturesFromInteger(int val) {
-    	Feature currentFeature;
-        List<Feature> listFeatures = new ArrayList<>();
-        Stack<Feature> reverseOrderedFeatures = new Stack<>();
-        Features result;
+    @RequestMapping(value = "/feature", method = {RequestMethod.POST})
+    public @ResponseBody UIFeatureFlags setFeatures(UIFeatureFlags input) {
+		return input;
+    	
+    }
+    /**
+     * 
+     * @param val
+     * @return
+     */
+    public UIFeatureFlags setFeaturesFromInteger(int val) {
+    	UIFeatureFlag currentFeature;
+        List<UIFeatureFlag> listFeatures = new ArrayList<>();
+        Stack<UIFeatureFlag> reverseOrderedFeatures = new Stack<>();
+        UIFeatureFlags result;
         
         String flags = Integer.toBinaryString(val);
         int j= flags.length()-1;
         
-        String[] regions = appConfig.getAvailableRegions();
+        String[] regions = ffConfig.getAvailableRegions();
         
         for (int i=regions.length-1; i>=0; i--) {
         	boolean isActive = false;
@@ -46,7 +71,7 @@ public class FeaturesController {
         		isActive = true;
         	}
         		
-        	currentFeature = new Feature(regions[i], isActive);
+        	currentFeature = new UIFeatureFlag(regions[i], isActive);
         	reverseOrderedFeatures.push(currentFeature);
         	j--;
         }
@@ -54,17 +79,17 @@ public class FeaturesController {
         while(!reverseOrderedFeatures.isEmpty()) {
         	listFeatures.add(reverseOrderedFeatures.pop());
         }
-        result = new Features(listFeatures);
+        result = new UIFeatureFlags(listFeatures);
         return result;
     }
     
-    public int setIntegerFromFeatures(Features flags) {
+    public int setIntegerFromFeatures(UIFeatureFlags flags) {
     	
-    	List<Feature> sortedListOfFeatures = sortFeaturesByRegion(flags.getListOfFeatures(), appConfig.getAvailableRegions());
+    	List<UIFeatureFlag> sortedListOfFeatures = sortFeaturesByRegion(flags.getListOfFeatures(), ffConfig.getAvailableRegions());
     	
     	StringBuilder sb = new StringBuilder();
-    	
-    	for(Feature flag : sortedListOfFeatures) {
+    	//uset stream map
+    	for(UIFeatureFlag flag : sortedListOfFeatures) {
     		if (flag.isActive())
     			sb.append('1');
     		else
@@ -73,10 +98,11 @@ public class FeaturesController {
     	return Integer.parseInt(sb.toString(), 2);
     }
     
-    public List<Feature> sortFeaturesByRegion(List<Feature> listOfFeatures, String[] regions) {
-    	Collections.sort(listOfFeatures, new Comparator<Feature>() {
+    public List<UIFeatureFlag> sortFeaturesByRegion(List<UIFeatureFlag> listOfFeatures, String[] regions) {
+    	//user stream.ciomparator.then.then
+    	Collections.sort(listOfFeatures, new Comparator<UIFeatureFlag>() {
     		@Override
-    		public int compare(Feature f1, Feature f2) {
+    		public int compare(UIFeatureFlag f1, UIFeatureFlag f2) {
     			return Integer.compare(Arrays.asList(regions).indexOf(f1.getName()), Arrays.asList(regions).indexOf(f2.getName()));
     		}
     	});

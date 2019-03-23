@@ -13,19 +13,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.sony.features.Application;
+import com.sony.features.FeatureFlagApplication;
 import com.sony.features.FeaturesController;
-import com.sony.features.dto.Feature;
-import com.sony.features.dto.Features;
+import com.sony.features.dto.UIFeatureFlag;
+import com.sony.features.dto.UIFeatureFlags;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = {Application.class, FeaturesController.class })
+@SpringApplicationConfiguration(classes = {FeatureFlagApplication.class, FeaturesController.class })
 public class FeaturesControllerTest {
 	
 	@Autowired
 	FeaturesController featuresController;
 	
-	List<Feature> listOfFeatures;
+	List<UIFeatureFlag> listOfFeatures;
 	
 	String[] regions = {"Asia","Korea","Europe","Japan","America"};
 	
@@ -33,41 +33,42 @@ public class FeaturesControllerTest {
 	public void setup() {
 		listOfFeatures = new ArrayList<>();
 		//Asia,Korea,Europe,Japan,America
-		Feature a = new Feature("Japan", false);
+		UIFeatureFlag a = new UIFeatureFlag("Japan", false);
 		listOfFeatures.add(a);
 		
-		a = new Feature("Asia", false);
+		a = new UIFeatureFlag("Asia", false);
 		listOfFeatures.add(a);
-		a = new Feature("America", true);
+		a = new UIFeatureFlag("America", true);
 		listOfFeatures.add(a);
-		a = new Feature("Europe", false);
+		a = new UIFeatureFlag("Europe", false);
 		listOfFeatures.add(a);
-		a = new Feature("Korea", false);
+		a = new UIFeatureFlag("Korea", false);
 		listOfFeatures.add(a);
 	}
 
 	@Test
 	public void sortFeaturesByRegion() {
 		
-		List<Feature> expectedResult = new ArrayList<>();
-		Feature a = new Feature("Asia", false);
+		List<UIFeatureFlag> expectedResult = new ArrayList<>();
+		UIFeatureFlag a = new UIFeatureFlag("Asia", false);
 		expectedResult.add(a);
-		a = new Feature("Korea", false);
+		a = new UIFeatureFlag("Korea", false);
 		expectedResult.add(a);
-		a = new Feature("Europe", false);
+		a = new UIFeatureFlag("Europe", false);
 		expectedResult.add(a);
-		a = new Feature("Japan", false);
+		a = new UIFeatureFlag("Japan", false);
 		expectedResult.add(a);	
-		a = new Feature("America", true);
+		a = new UIFeatureFlag("America", true);
 		expectedResult.add(a);
 		
-		List<Feature> result = featuresController.sortFeaturesByRegion(listOfFeatures, regions);
+		List<UIFeatureFlag> result = featuresController.sortFeaturesByRegion(listOfFeatures, regions);
 		assertEquals(expectedResult, result);
+		System.out.println(result);
 	}
 	
 	@Test
 	public void integerFromFeatures() {
-		Features flag = new Features(listOfFeatures);
+		UIFeatureFlags flag = new UIFeatureFlags(listOfFeatures);
 		int result = featuresController.setIntegerFromFeatures(flag);
 		assertEquals(1, result);
 	}

@@ -1,14 +1,14 @@
 package com.sony.features.dto;
 
-public class Feature {
+public class UIFeatureFlag {
 	String name;
 	boolean isActive;
 	
-	public Feature() {
+	public UIFeatureFlag() {
 		
 	}
 	
-	public Feature(String name, boolean isActive) {
+	public UIFeatureFlag(String name, boolean isActive) {
 		super();
 		this.name = name;
 		this.isActive = isActive;
@@ -42,14 +42,14 @@ public class Feature {
             return true; 
         } 
   
-        /* Check if o is an instance of Complex or not 
+        /* Check if o is an instance of UIFeatureFlag or not 
           "null instanceof [type]" also returns false */
-        if (!(obj instanceof Feature)) { 
+        if (!(obj instanceof UIFeatureFlag)) { 
             return false; 
         } 
           
-        // typecast o to Complex so that we can compare data members  
-        Feature f = (Feature) obj; 
+        // typecast o to UIFeatureFlag so that we can compare data members  
+        UIFeatureFlag f = (UIFeatureFlag) obj; 
           
         // Compare the data members and return accordingly  
         return name.equals(f.name)
