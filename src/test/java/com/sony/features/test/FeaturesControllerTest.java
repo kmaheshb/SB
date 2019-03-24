@@ -16,7 +16,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.sony.features.FeatureFlagApplication;
 import com.sony.features.FeaturesController;
 import com.sony.features.dto.UIFeatureFlag;
-import com.sony.features.dto.UIFeatureFlags;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {FeatureFlagApplication.class, FeaturesController.class })
@@ -28,7 +27,7 @@ public class FeaturesControllerTest {
 	List<UIFeatureFlag> listOfFeatures;
 	
 	String[] regions = {"Asia","Korea","Europe","Japan","America"};
-	
+	/*
 	@Before
 	public void setup() {
 		listOfFeatures = new ArrayList<>();
@@ -72,5 +71,5 @@ public class FeaturesControllerTest {
 		int result = featuresController.setIntegerFromFeatures(flag);
 		assertEquals(1, result);
 	}
-
+*/
 }

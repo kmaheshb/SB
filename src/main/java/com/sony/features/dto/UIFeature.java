@@ -1,13 +1,15 @@
 package com.sony.features.dto;
 
+import java.util.List;
+
 public class UIFeature {
 	private String name;
-	private UIFeatureFlags value;
+	private List<UIFeatureFlag> value;
 	
 	public UIFeature() {		
 	}
 	
-	public UIFeature(String name, UIFeatureFlags value) {
+	public UIFeature(String name, List<UIFeatureFlag> value) {
 		super();
 		this.name = name;
 		this.value = value;
@@ -21,11 +23,11 @@ public class UIFeature {
 		this.name = name;
 	}
 
-	public UIFeatureFlags getValue() {
+	public List<UIFeatureFlag> getValue() {
 		return value;
 	}
 
-	public void setValue(UIFeatureFlags value) {
+	public void setValue(List<UIFeatureFlag> value) {
 		this.value = value;
 	}
 

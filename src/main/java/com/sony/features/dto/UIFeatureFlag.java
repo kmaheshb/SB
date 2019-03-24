@@ -1,25 +1,27 @@
 package com.sony.features.dto;
 
 public class UIFeatureFlag {
-	String name;
+	String region;
 	boolean isActive;
+	int positionFromRight;
 	
 	public UIFeatureFlag() {
 		
 	}
 	
-	public UIFeatureFlag(String name, boolean isActive) {
+	public UIFeatureFlag(String region, boolean isActive, int positionFromRight) {
 		super();
-		this.name = name;
+		this.region = region;
 		this.isActive = isActive;
+		this.positionFromRight = positionFromRight;
 	}
 
-	public String getName() {
-		return name;
+	public String getRegion() {
+		return region;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setRegion(String region) {
+		this.region = region;
 	}
 
 	public boolean isActive() {
@@ -32,7 +34,7 @@ public class UIFeatureFlag {
 
 	@Override
 	public String toString() {
-		return "Feature [name=" + name + ", isActive=" + isActive + "]";
+		return "Feature [region=" + region + ", isActive=" + isActive + ", positionFromRight=" + positionFromRight + "]";
 	}
 
 	@Override
@@ -52,8 +54,9 @@ public class UIFeatureFlag {
         UIFeatureFlag f = (UIFeatureFlag) obj; 
           
         // Compare the data members and return accordingly  
-        return name.equals(f.name)
-                && Boolean.compare(isActive, f.isActive) == 0; 
+        return region.equals(f.region)
+                && Boolean.compare(isActive, f.isActive) == 0
+                && Integer.compare(positionFromRight, f.positionFromRight) == 0; 
 	}	
 	
 }
