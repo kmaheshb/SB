@@ -70,6 +70,12 @@ public class UIConversionUtil {
 		return new FeatureFlag(input.getName(), setIntegerFromFeatures(input.getValue()));
 	}
 	
+	/**
+	 * This function takes the feature flags provided by the UI 
+	 * and returns the corresponding integer value 
+	 * @param flags List of feature flags (region and booleans) from the UI
+	 * @return		An Integer value
+	 */
 	public int setIntegerFromFeatures(List<UIFeatureFlag> flags) {
     	
     	List<UIFeatureFlag> sortedListOfFeatures = sortFeaturesByRegion(flags, ffConfig.getAvailableRegions());
@@ -85,6 +91,12 @@ public class UIConversionUtil {
     	return Integer.parseInt(sb.toString(), 2);
     }
     
+	/**
+	 * 
+	 * @param listOfFeatures
+	 * @param regions
+	 * @return
+	 */
     public List<UIFeatureFlag> sortFeaturesByRegion(List<UIFeatureFlag> listOfFeatures, String[] regions) {
     	//use stream.comparator.then.then
     	Collections.sort(listOfFeatures, new Comparator<UIFeatureFlag>() {
