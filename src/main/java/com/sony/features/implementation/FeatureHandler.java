@@ -7,6 +7,9 @@ import com.sony.features.model.IFeatureHandler;
 @Component
 public class FeatureHandler implements IFeatureHandler {
 
+	/**
+	 * This function sets the bit value when selected
+	 */
 	@Override
 	public int selectRegion(int val, int position) {
 		
@@ -19,8 +22,11 @@ public class FeatureHandler implements IFeatureHandler {
 		return (int)(val ^ x);
 	}
 
+	/**
+	 * This function negates the set bit value when unselected
+	 */
 	@Override
-	public int deselectRegion(int val, int position) {
+	public int unselectRegion(int val, int position) {
 		int x = 1;
 		int i=0;
 		while(i<position) {

@@ -4,11 +4,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
 
 import com.sony.features.config.FeatureFlagConfig;
@@ -24,12 +27,32 @@ public class UIConversionUtil {
 	@Autowired
 	FeatureFlagConfig ffConfig;
 	
+	/**
+	 * Ideally, we need UI display name from source (FF Service) or persisted data source (eg. Database)
+	 * @return HashMap consisting names specified in FF service and corresponding display names
+	 */
+	@Bean
+	public Map<String, String> featureNameMap(){
+	    Map<String, String>  nameMap = new HashMap<>();
+	    nameMap.put("useAwesomeGames", "Use Awesome Games");
+	    nameMap.put("useNewFeature", "Use New Feature");
+	    nameMap.put("Identity_Information", "Identity Information");
+	    return nameMap;
+	}
+	
+	/**
+	 * This functions takes list of all features and their values in Integer format and 
+	 * transforms them to the objects as required by the UI
+	 * 
+	 * @param allFlags All feature flags
+	 * @return
+	 */
 	public UIFeatures setFlagsToUIDataModel(FeatureFlags allFlags) {
 		
 		UIFeatures result = new UIFeatures();
 		
 		List<UIFeature> uiFeatures = allFlags.getListofFeatureFlags().stream().map(feature -> 
-			new UIFeature(feature.getName(), setFeaturesFromInteger(feature.getValue()))
+			new UIFeature(feature.getName(), featureNameMap().get(feature.getName()), setFeaturesFromInteger(feature.getValue()))
 		).collect(Collectors.toList());
 		
 		result.setListOfFeatures(uiFeatures);
@@ -37,6 +60,16 @@ public class UIConversionUtil {
 		
 	}
 	
+	/**
+	 * This function takes an integer and sets the boolean values per region
+	 * as specified in the configuration
+	 * 
+	 * Ideally we need to get the list of regions and its order from a 
+	 * persisted data source
+	 * 
+	 * @param val Integer value
+	 * @return
+	 */
 	public List<UIFeatureFlag> setFeaturesFromInteger(int val) {
     	UIFeatureFlag currentFeature;
         List<UIFeatureFlag> listFeatures = new ArrayList<>();
@@ -66,6 +99,13 @@ public class UIConversionUtil {
         return listFeatures;
     }
 	
+	/**
+	 * This functions transforms the value coming from UI which is in booleans to an 
+	 * Integer which is being stored in the FF service 
+	 * 
+	 * @param input Feature name and value in booleans from the UI
+	 * @return
+	 */
 	public FeatureFlag setFeatureFromUIModel(UIFeature input) {
 		return new FeatureFlag(input.getName(), setIntegerFromFeatures(input.getValue()));
 	}
@@ -92,6 +132,9 @@ public class UIConversionUtil {
     }
     
 	/**
+	 * This function sorts the feature flags coming from the UI in the order of 
+	 * regions specified in the configuration, since we cannot trust the order of flags
+	 * coming from the UI
 	 * 
 	 * @param listOfFeatures
 	 * @param regions

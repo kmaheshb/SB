@@ -26,7 +26,7 @@ public class FeatureHandlerTest {
 
 	@Test
 	public void testDeselectRegion() {
-		int result = featureHandler.deselectRegion(7, 2);
+		int result = featureHandler.unselectRegion(7, 2);
 		assertEquals(3, result);
 	}
 }
