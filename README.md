@@ -13,7 +13,9 @@ Install JAVA and an editor like Eclipse / Spring Tool Suite on your local machin
 ### Installing and Running the application
 
 Import project as a Maven project
+
 Run as 'Maven Build'
+
 Run as 'Spring Boot App'
 
 The UI has been built and placed under 'srs\main\resources\public' directory
